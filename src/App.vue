@@ -2,15 +2,25 @@
   <div>
     <div class="top">
       <h1>Posts Page</h1>
+
+      <div class="app__btns">
+        <my-button
+         @click="fetchPosts"
+        >Get Posts
+        </my-button>
+
+      <my-select 
+        v-model="selectedSort"
+        :options="sortOptions"
+      />      
+      </div>
+
       <my-button
         @click="showDialog"
         >Add Post
       </my-button>
 
-      <my-button
-        @click="fetchPosts"
-        >Get Posts
-      </my-button>
+      
     </div>
     
 
@@ -20,7 +30,7 @@
     </my-dialog>
     
     <PostList 
-    :posts="posts"
+    :posts="sortedPosts"
     @remove="removePost"
     v-if="!isPostsLoading"   
     />
@@ -48,7 +58,12 @@
       return {
         posts: [],
         dialogVisible: false,
-        isPostsLoading: false
+        isPostsLoading: false,
+        selectedSort: '',
+        sortOptions: [
+          {value: 'title', name: 'By Name'},
+          {value: 'body', name: 'By Text'}          
+        ]
       }
     },
 
@@ -83,10 +98,19 @@
     },
 
     // hooks outside of methods
-    mounted() {
-        console.log('mounted');
+    mounted() {        
         this.fetchPosts();
+    },
+
+    computed: {
+      sortedPosts() {
+        return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort])
+        )
       }
+    },
+
+    watch: {      
+    }
   }
 </script>
 
@@ -104,6 +128,11 @@
   button{
     margin-top: 15px;
   }
+}
+
+.app__btns{
+  display: flex;
+  justify-content: space-between;
 }
 
 .preloader{

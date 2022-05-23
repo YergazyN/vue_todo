@@ -2,8 +2,8 @@
     <div class="post">
         <div>
             <div><strong>Title:</strong> {{ post.title }}</div>
-            <div><strong>Body:</strong> {{ post.text }}</div>
-            <div><strong>Author:</strong> {{ post.author }}</div>
+            <div><strong>Body:</strong> {{ post.body }}</div>
+            <div><strong>Id:</strong> {{ post.id }}</div>
         </div>
         <div class="post__btns">            
             <my-button
@@ -37,5 +37,9 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;;
+    }
+
+    .post__btns{
+        margin-left: 20px;
     }
 </style>
