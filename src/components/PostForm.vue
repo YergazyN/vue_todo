@@ -8,7 +8,7 @@
           placeholder="Post title"
       />
       <my-input  
-          v-model="post.text"
+          v-model="post.body"
           type="text"
           placeholder="Post text"
       />
@@ -37,7 +37,7 @@ export default {
     return {
       post: {
         title: '',
-        text: '',
+        body: '',
         author: ''
       }
     }
@@ -53,7 +53,7 @@ export default {
 
         this.post = {
           title: '',
-          text: '',
+          body: '',
           author: ''
         }       
       }
