@@ -6,6 +6,11 @@
         @click="showDialog"
         >Add Post
       </my-button>
+
+      <my-button
+        @click="fetchPosts"
+        >Get Posts
+      </my-button>
     </div>
     
 
@@ -16,8 +21,11 @@
     
     <PostList 
     :posts="posts"
-    @remove="removePost"   
+    @remove="removePost"
+    v-if="!isPostsLoading"   
     />
+
+    <div v-else class="preloader">Loading ...</div>
     
   </div>
 </template>
@@ -28,7 +36,8 @@
 
   import PostForm from './components/PostForm.vue';
   import PostList from './components/PostList.vue';
-import MyDialog from './components/UI/MyDialog.vue';
+  import MyDialog from './components/UI/MyDialog.vue';
+  import axios from "axios";
 
   export default{
     components: {
@@ -37,14 +46,9 @@ import MyDialog from './components/UI/MyDialog.vue';
     },
     data() {
       return {
-        posts: [
-          {id:1, title: "Post One", text: "Post One Text", author: "Johnny Depp"},
-          {id:2, title: "Post Two", text: "Post Two Text", author: "Tom Hanks"},
-          {id:3, title: "Post Three", text: "Post Three Text", author: "Brad Pitt"},
-          {id:4, title: "Post Four", text: "Post Four Text", author: "Robert Downey Jr."},
-          {id:5, title: "Post Five", text: "Post Five Text", author: "Emma Watson"}
-        ],
-        dialogVisible: false
+        posts: [],
+        dialogVisible: false,
+        isPostsLoading: false
       }
     },
 
@@ -59,9 +63,30 @@ import MyDialog from './components/UI/MyDialog.vue';
 
       showDialog() {
         this.dialogVisible = true
+      },
+      async fetchPosts() {        
+        try {
+          this.isPostsLoading = true;
+          setTimeout(async () => {
+            const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10');
+            console.log(response);
+            this.posts = response.data;
+            this.isPostsLoading = false;
+          }, 2000) 
+          
+        } catch {
+          alert("Error")
+        } finally{
+          
+        }
+      }     
+    },
+
+    // hooks outside of methods
+    mounted() {
+        console.log('mounted');
+        this.fetchPosts();
       }
-      
-    }
   }
 </script>
 
@@ -79,6 +104,10 @@ import MyDialog from './components/UI/MyDialog.vue';
   button{
     margin-top: 15px;
   }
+}
+
+.preloader{
+  padding: 15px;
 }
 
 
